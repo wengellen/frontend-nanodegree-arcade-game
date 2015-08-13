@@ -3,9 +3,25 @@ var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
+    // Returns a random start position
+    this.getRandomStartPos = function(){
+        return -(getRandomArbitrary(100, 1000) + this.width);
+    };
+
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    this.width = Board.cellW;
+    this.height = 171;
+    this.sprite =  'images/enemy-bug.png';//'images/char-horn-girl.png';//'images/enemy-bug.png';
+    this.x = this.getRandomStartPos();
+    this.y = 0;
+    this.speed = getRandomArbitrary(50, 120);
+};
+
+
+// Returns a random number between min (inclusive) and max (exclusive)
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
 }
 
 // Update the enemy's position, required method for game
@@ -14,22 +30,59 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-}
+    var pos = this.x;
+    this.x = (pos) % canvas.width;
+    if(pos >= canvas.width){
+        this.x = this.getRandomStartPos();
+    }
+    this.x += dt * this.speed;
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
+var Player = function(){
+    this.width = Board.cellW;
+    this.height = 171;
+    this.sprite = "images/char-boy.png";
+    this.x =  (canvas.width/2) - (Board.cellW/2);
+    this.y =  canvas.height - this.height;
+};
+
+Player.prototype.update = function(){
+    //console.log("player.y:"+this.y);
+};
+
+Player.prototype.render = function(){
+   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 // a handleInput() method.
+
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+var allEnemies = [];
 
+function createEnemies(num){
+    for(var i = 0; i < num; i++) {
+        var enemy = new Enemy();
+        // first row
+        enemy.y = (i+1) * Board.cellH - 20;
+        console.log('enemy-'+ i + ":" + enemy.y);
+        allEnemies.push(enemy);
+    }
+}
+
+createEnemies(3);
+
+// Place the player object in a variable called player
+var player = new Player();
 
 
 // This listens for key presses and sends the keys to your
@@ -44,3 +97,5 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+console.log(Engine);
