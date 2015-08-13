@@ -49,20 +49,46 @@ var Player = function(){
     this.width = Board.cellW;
     this.height = 171;
     this.sprite = "images/char-boy.png";
+    this.vy = Board.cellH;
+    this.vx = Board.cellW;
     this.x =  (canvas.width/2) - (Board.cellW/2);
-    this.y =  canvas.height - this.height;
+    this.y =  canvas.height - (this.height + Board.cellH/2);
+
+    this.handleInput = function(dir){
+        switch(dir) {
+            case 'left':
+                this.x -= this.vx ;
+                break;
+
+            case 'right':
+                this.x += this.vx ;
+                break;
+
+            case 'up':
+                this.y -= this.vy ;
+                console.log(this.y);
+                break;
+
+            case 'down':
+                this.y += this.vy ;
+                console.log(this.y);
+                break;
+
+            default:
+                console.log("There is an problem");
+        }
+    }
+
 };
 
 Player.prototype.update = function(){
     //console.log("player.y:"+this.y);
+
 };
 
 Player.prototype.render = function(){
    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-// a handleInput() method.
-
 
 
 // Now instantiate your objects.
