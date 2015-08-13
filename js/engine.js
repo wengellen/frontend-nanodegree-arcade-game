@@ -84,7 +84,9 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+        //checkGameWon();
+
     }
 
     /* This is called by the update function  and loops through all of the
@@ -169,6 +171,14 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        if(gameStatus === GAME_STATUS_LOSS ||
+            gameStatus === GAME_STATUS_WON
+           ) {
+            player.x = player.startPos[0];
+            player.y = player.startPos[1];
+
+            gameStatus = GAME_STATUS_START
+        }
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -196,7 +206,8 @@ var Engine = (function(global) {
      */
     global.Board = {
         cellW: cellW,
-        cellH: cellH
+        cellH: cellH,
+        reset:reset
     }
 
 })(this);

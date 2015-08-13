@@ -1,3 +1,11 @@
+
+var NUM_ENEMY = 3;
+var GAME_STATUS_START = 0;
+var GAME_STATUS_WON = 1;
+var GAME_STATUS_LOSS = 2;
+var gameStatus = GAME_STATUS_START;
+var STARTING_CELL_NUM = 6 ;
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -10,12 +18,21 @@ var Enemy = function() {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.width = Board.cellW;
-    this.height = 171;
+    this.width = 101;
+    this.height = 77;
     this.sprite =  'images/enemy-bug.png';//'images/char-horn-girl.png';//'images/enemy-bug.png';
     this.x = this.getRandomStartPos();
     this.y = 0;
-    this.speed = getRandomArbitrary(50, 120);
+    this.speed = getRandomArbitrary(50, 120)
+    this.offsetX = 1;
+    this.offsetTop = 77;
+    this.offsetBottom = 17;
+    this.getBounds = function() {
+        return  { "top": this.y + this.offsetTop,
+            "right": this.x + this.offsetX + this.width,
+            "bottom": this.y + this.offsetTop + this.height,
+            "left": this.x + this.offsetX};
+    }
 };
 
 
@@ -46,18 +63,29 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 var Player = function(){
-    this.width = Board.cellW;
-    this.height = 171;
+    this.width = 67;
+    this.height = 83;
     this.sprite = "images/char-boy.png";
     this.vy = Board.cellH;
+    this.offsetTop = 63;
+    this.offsetX = 19;
     this.vx = Board.cellW;
     this.x =  (canvas.width/2) - (Board.cellW/2);
-    this.y =  canvas.height - (this.height + Board.cellH/2);
+    this.y =  (STARTING_CELL_NUM - 1) * Board.cellH - 10;  //Staring from the 6th row
+    this.startPos = [this.x, this.y];
+    this.getBounds = function(){
+        return  { "top": this.y + this.offsetTop,
+                  "right": this.x + this.offsetX + this.width,
+                  "bottom": this.y + this.offsetTop + this.height,
+                    "left": this.x + this.offsetX};
+    }
 
     this.handleInput = function(dir){
         switch(dir) {
             case 'left':
-                this.x -= this.vx ;
+                if(isLegalMove()) {
+                    this.x -= this.vx;
+                }
                 break;
 
             case 'right':
@@ -77,14 +105,45 @@ var Player = function(){
             default:
                 console.log("There is an problem");
         }
+        checkGameWon();
     }
 
 };
 
+
 Player.prototype.update = function(){
     //console.log("player.y:"+this.y);
+    //checkCollision();
+    //checkGameWon();
+}
 
-};
+function checkCollisions(){
+    if(gameStatus != GAME_STATUS_START) return;
+
+    for(var i = 0; i < allEnemies.length; i++) {
+        var enemy = allEnemies[i];
+        var playerBounds = player.getBounds();
+        var enemyBounds = enemy.getBounds();
+        if((enemyBounds.right > playerBounds.left &&
+            enemyBounds.left < playerBounds.right) &&
+            (enemyBounds.bottom > playerBounds.top &&
+            enemyBounds.top < playerBounds.bottom )
+        ){
+            console.log('Collided!');
+            gameStatus = GAME_STATUS_LOSS;
+            Board.reset();
+        }
+    }
+}
+
+function checkGameWon(){
+    var playerBounds = player.getBounds();
+    if(playerBounds.top > 0 && playerBounds.top < Board.cellH){
+            console.log('You Won!!');
+            gameStatus = GAME_STATUS_WON;
+            //Board.reset();
+        }
+}
 
 Player.prototype.render = function(){
    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -100,12 +159,11 @@ function createEnemies(num){
         var enemy = new Enemy();
         // first row
         enemy.y = (i+1) * Board.cellH - 20;
-        console.log('enemy-'+ i + ":" + enemy.y);
         allEnemies.push(enemy);
     }
 }
 
-createEnemies(3);
+createEnemies(NUM_ENEMY);
 
 // Place the player object in a variable called player
 var player = new Player();
@@ -124,4 +182,9 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-console.log(Engine);
+
+// TODO: Collision
+
+
+
+// TODO: End game
