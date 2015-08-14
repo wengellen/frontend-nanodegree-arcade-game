@@ -61,7 +61,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -84,9 +84,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        checkCollisions();
-        //checkGameWon();
-
+        //checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -121,13 +119,8 @@ var Engine = (function(global) {
                 'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
-           /* numRows = 6,
-            numCols = 5,
-            cellW = 101,
-            cellH = 83,*/
+
             row, col;
-
-
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -145,7 +138,6 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * cellW, row * cellH);
             }
         }
-
 
         renderEntities();
     }
@@ -201,12 +193,14 @@ var Engine = (function(global) {
     global.ctx = ctx;
     global.canvas = canvas;
 
-    /* This object defines the publicly accessible functions available to
-     * developers by creating a global Resources object.
+    /* This object defines the publicly accessible Board object
+     *
      */
     global.Board = {
         cellW: cellW,
         cellH: cellH,
+        numRows: numRows,
+        numCols: numCols,
         reset:reset
     }
 
