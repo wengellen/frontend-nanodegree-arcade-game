@@ -1,16 +1,24 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+What is it?
+-----------
 
-for self-checking their submission.
+The **frontend-nanodegree-arcade-game** is a javascript frogger game project created for Udacity's Front End Developer Nanodegree.
 
-**Game Rules:**
+How to Run
+----------
+
+To run the game, please click on **index.html** to open it in the browser.
+
+Game Rules
+----------
 
 - Move player to the top-most blue tile to **win** the game.
 
-- You **loss** the game if the player is collided with the enemies. 
+- You **loss** the game if the player is collided with the enemies.
 
 - Use keyboard keys "**up**", "**down**", "**left**", "**right**" to move the player upward, downward, leftward and rightward, respectively.
+ 
  
 
