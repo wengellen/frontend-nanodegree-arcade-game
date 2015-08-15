@@ -1,34 +1,30 @@
 'use strict';
 
 var NUM_ENEMY = 3;
-var GAME_STATUS_START = 0; 
+var GAME_STATUS_START = 0;
 var GAME_STATUS_WON = 1;
 var GAME_STATUS_LOSS = 2;
 var gameStatus = GAME_STATUS_START;
-var STARTING_CELL_NUM = 6 ;
+var STARTING_CELL_NUM = 6;
 var allEnemies = [];
 var player;
 
 // Enemies our player must avoid
 var Enemy = function() {
-    // Returns a random start position for each enemy
-    this.getRandomStartPos = function(){
-        return -(getRandomArbitrary(100, 1000) + this.width);
-    };
-    this.width = 101;  // enemy sprite actual image area width
-    this.height = 77;  // enemy sprite actual image area height
-    this.sprite =  'images/enemy-bug.png';
-    this.x = this.getRandomStartPos(); // default start x position
-    this.y = 0;    // default start y position
-    this.speed = getRandomArbitrary(50, 120);   // create random speed for each enemy
-    this.offsetLeft = 1;  // enemy sprite left empty area
-    this.offsetTop = 77;  // enemy sprite top empty area
+    this.width = 101; // enemy sprite actual image area width
+    this.height = 77; // enemy sprite actual image area height
+    this.sprite = 'images/enemy-bug.png';
+    this.x = -(getRandomArbitrary(100, 1000) + this.width); // default start x position
+    this.y = 0; // default start y position
+    this.speed = getRandomArbitrary(50, 120); // create random speed for each enemy
+    this.offsetLeft = 1; // enemy sprite left empty area
+    this.offsetTop = 77; // enemy sprite top empty area
     this.getBounds = function() {
-        return  {
-            'top': this.y + this.offsetTop,
-            'right': this.x + this.offsetLeft + this.width,
-            'bottom': this.y + this.offsetTop + this.height,
-            'left': this.x + this.offsetLeft
+        return {
+            top: this.y + this.offsetTop,
+            right: this.x + this.offsetLeft + this.width,
+            bottom: this.y + this.offsetTop + this.height,
+            left: this.x + this.offsetLeft
         };
     };
 };
@@ -46,8 +42,8 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     var pos = this.x;
     this.x = (pos) % canvas.width;
-    if(pos >= canvas.width){
-        this.x = this.getRandomStartPos();   // To create random re-start positions
+    if (pos >= canvas.width) {
+        this.x = -(getRandomArbitrary(100, 1000) + this.width); // To create random re-start positions
     }
     this.x += dt * this.speed;
 };
@@ -61,80 +57,83 @@ Enemy.prototype.render = function() {
  * Player Class
  * @constructor
  */
-var Player = function(){
-    this.offsetY = 10;  // player y position offset value;
-    this.minY = 0 - this.offsetY;   // The left-most in-bound x value
+var Player = function() {
+    this.offsetY = 10; // player y position offset value;
+    this.minY = -this.offsetY; // The left-most in-bound x value
     this.maxY = (STARTING_CELL_NUM - 1) * Board.cellH - this.offsetY; // The top-most in-bound y value
-    this.minX = 0;                  // The right-most in-bound x value
-    this.maxX = (Board.numCols-1) * Board.cellW;                       // The bottom-most in-bound y value
-    this.width = 67;         // player sprite actual image area width
-    this.height = 83;        // player sprite actual image area height
+    this.minX = 0; // The right-most in-bound x value
+    this.maxX = (Board.numCols - 1) * Board.cellW; // The bottom-most in-bound y value
+    this.width = 67; // player sprite actual image area width
+    this.height = 83; // player sprite actual image area height
     this.sprite = 'images/char-boy.png';
-    this.vy = Board.cellH;   // y velocity
-    this.vx = Board.cellW;   // x velocity
-    this.offsetTop = 63;     // player sprite top empty area
-    this.offsetLeft = 19;    // player sprite left empty area
-    this.y =  this.maxY;     // Starting Y Position
-    this.x =  (canvas.width/2) - (Board.cellW/2);   // Start X Position at the center
-    this.startPos = [this.x, this.y];   // Store position for reset
-    this.getBounds = function(){        // Used for collision detection bound checking
-        return  { 'top': this.y + this.offsetTop,
-                  'right': this.x + this.offsetLeft + this.width,
-                  'bottom': this.y + this.offsetTop + this.height,
-                  'left': this.x + this.offsetLeft};
+    this.vy = Board.cellH; // y velocity
+    this.vx = Board.cellW; // x velocity
+    this.offsetTop = 63; // player sprite top empty area
+    this.offsetLeft = 19; // player sprite left empty area
+    this.y = this.maxY; // Starting Y Position
+    this.x = (canvas.width / 2) - (Board.cellW / 2); // Start X Position at the center
+    this.startPos = [this.x, this.y]; // Store position for reset
+    this.getBounds = function() { // Used for collision detection bound checking
+        return {
+            top: this.y + this.offsetTop,
+            right: this.x + this.offsetLeft + this.width,
+            bottom: this.y + this.offsetTop + this.height,
+            left: this.x + this.offsetLeft
+        };
     };
 
-    this.handleInput = function(dir){
-        switch(dir) {
-            case 'left':
-                    var posX = this.x;
-                    if(parseInt(posX - this.vx) < parseInt(this.minX)){
-                        console.log('illegal move');
-                    }else {
-                        this.x -= this.vx ;
-                    }
-                break;
+    this.handleInput = function(dir) {
+        var posX,
+            posY;
+        posX = this.x;
+        posY = this.y;
 
-            case 'right':
-                    posX = this.x;
-                    if(parseInt(posX + this.vx) > parseInt(this.maxX)){
-                        console.log('illegal move');
-                    }else {
-                        this.x += this.vx ;
-                    }
+        switch (dir) {
+        case 'left':
+            if (parseInt(posX - this.vx) < parseInt(this.minX)) {
+                console.log('illegal move');
+            } else {
+                this.x -= this.vx;
+            }
+            break;
 
-                break;
+        case 'right':
+            if (parseInt(posX + this.vx) > parseInt(this.maxX)) {
+                console.log('illegal move');
+            } else {
+                this.x += this.vx;
+            }
 
-            case 'up':
-                    var posY = this.y;
-                    if(parseInt(posY - this.vy) < parseInt(this.minY)){
-                        console.log('illegal move');
-                    }else {
-                        this.y -= this.vy;
-                    }
-                break;
+            break;
 
-            case 'down':
-                    posY = this.y;
-                    if(parseInt(posY + this.vy) > parseInt(this.maxY)){
-                        console.log('illegal move');
-                    }else {
-                        this.y += this.vy;
-                    }
-                break;
+        case 'up':
+            if (parseInt(posY - this.vy) < parseInt(this.minY)) {
+                console.log('illegal move');
+            } else {
+                this.y -= this.vy;
+            }
+            break;
 
-            default:
-                console.log('Key not allowed');
+        case 'down':
+            if (parseInt(posY + this.vy) > parseInt(this.maxY)) {
+                console.log('illegal move');
+            } else {
+                this.y += this.vy;
+            }
+            break;
+
+        default:
+            console.log('Key not allowed');
         }
         checkGameWon();
     };
 };
 
-Player.prototype.update = function(){
+Player.prototype.update = function() {
     checkCollisions();
 };
 
-Player.prototype.render = function(){
+Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -143,12 +142,15 @@ Player.prototype.render = function(){
  * save them to allEnemies array
  * @param num Default number of enemy to create
  */
-function createEnemies(num){
-    for(var i = 0; i < num; i++) {
-        var enemy = new Enemy();
-        // first row
-        enemy.y = (i+1) * Board.cellH - 20;
+function createEnemies(num) {
+    var enemy,
+        i;
+    i = 0;
+    while (i < num) {
+        enemy = new Enemy();
+        enemy.y = (i + 1) * Board.cellH - 20;
         allEnemies.push(enemy);
+        i += 1;
     }
 }
 
@@ -162,23 +164,24 @@ player = new Player();
  *  And reset the player position to the start position when collided.
  *
  */
-function checkCollisions(){
-    if(gameStatus != GAME_STATUS_START) return;
+function checkCollisions() {
+    if (gameStatus !== GAME_STATUS_START) {
+        return;
+    }
 
-    for(var i = 0; i < allEnemies.length; i++) {
-        var enemy = allEnemies[i];
-        var playerBounds = player.getBounds();
-        var enemyBounds = enemy.getBounds();
-        if((enemyBounds.right > playerBounds.left &&
-            enemyBounds.left < playerBounds.right) &&
-            (enemyBounds.bottom > playerBounds.top &&
-            enemyBounds.top < playerBounds.bottom )
-        ){
+    var playerBounds,
+        enemyBounds;
+
+    allEnemies.forEach(function(enemy) {
+        playerBounds = player.getBounds();
+        enemyBounds = enemy.getBounds();
+        if (enemyBounds.right > playerBounds.left && enemyBounds.left < playerBounds.right &&
+            enemyBounds.bottom > playerBounds.top && enemyBounds.top < playerBounds.bottom) {
             console.log('Collided!');
             gameStatus = GAME_STATUS_LOSS;
             Board.reset();
         }
-    }
+    });
 }
 
 /**
@@ -186,10 +189,10 @@ function checkCollisions(){
  *  reaching the top-most cell on the board.
  *  It's called every time when a key event happened.
  */
-function checkGameWon(){
+function checkGameWon() {
     var playerBounds = player.getBounds();
-    if(playerBounds.top > 0 &&
-        playerBounds.top < Board.cellH){
+    if (playerBounds.top > 0 &&
+        playerBounds.top < Board.cellH) {
         console.log('You Won!!');
         gameStatus = GAME_STATUS_WON;
         Board.reset();
@@ -205,6 +208,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
