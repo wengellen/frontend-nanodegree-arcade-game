@@ -1,3 +1,5 @@
+'use strict';
+
 var NUM_ENEMY = 3;
 var GAME_STATUS_START = 0; 
 var GAME_STATUS_WON = 1;
@@ -125,7 +127,7 @@ var Player = function(){
                 console.log('Key not allowed');
         }
         checkGameWon();
-    }
+    };
 };
 
 Player.prototype.update = function(){
@@ -189,8 +191,8 @@ function checkGameWon(){
     if(playerBounds.top > 0 &&
         playerBounds.top < Board.cellH){
         console.log('You Won!!');
-        gameStatus = GAME_STATUS_START;
-        //Board.reset();
+        gameStatus = GAME_STATUS_WON;
+        Board.reset();
     }
 }
 
