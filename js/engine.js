@@ -1,3 +1,5 @@
+'use strict';
+
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -120,7 +122,8 @@ var Engine = (function(global) {
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
 
-            row, col;
+            row,
+            col;
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -162,14 +165,11 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
-        if(gameStatus === GAME_STATUS_LOSS ||
-            gameStatus === GAME_STATUS_WON
-           ) {
+        if (gameStatus === GAME_STATUS_LOSS ||
+            gameStatus === GAME_STATUS_WON) {
             player.x = player.startPos[0];
             player.y = player.startPos[1];
-
-            gameStatus = GAME_STATUS_START
+            gameStatus = GAME_STATUS_START;
         }
     }
 
@@ -201,7 +201,7 @@ var Engine = (function(global) {
         cellH: cellH,
         numRows: numRows,
         numCols: numCols,
-        reset:reset
-    }
+        reset: reset
+    };
 
 })(this);
