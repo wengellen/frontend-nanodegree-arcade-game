@@ -89,41 +89,41 @@ var Player = function() {
         posY = this.y;
 
         switch (dir) {
-        case 'left':
-            if (parseInt(posX - this.vx) < parseInt(this.minX)) {
-                console.log('illegal move');
-            } else {
-                this.x -= this.vx;
-            }
-            break;
+            case 'left':
+                if (parseInt(posX - this.vx) < parseInt(this.minX)) {
+                    console.log('illegal move');
+                } else {
+                    this.x -= this.vx;
+                }
+                break;
 
-        case 'right':
-            if (parseInt(posX + this.vx) > parseInt(this.maxX)) {
-                console.log('illegal move');
-            } else {
-                this.x += this.vx;
-            }
+            case 'right':
+                if (parseInt(posX + this.vx) > parseInt(this.maxX)) {
+                    console.log('illegal move');
+                } else {
+                    this.x += this.vx;
+                }
 
-            break;
+                break;
 
-        case 'up':
-            if (parseInt(posY - this.vy) < parseInt(this.minY)) {
-                console.log('illegal move');
-            } else {
-                this.y -= this.vy;
-            }
-            break;
+            case 'up':
+                if (parseInt(posY - this.vy) < parseInt(this.minY)) {
+                    console.log('illegal move');
+                } else {
+                    this.y -= this.vy;
+                }
+                break;
 
-        case 'down':
-            if (parseInt(posY + this.vy) > parseInt(this.maxY)) {
-                console.log('illegal move');
-            } else {
-                this.y += this.vy;
-            }
-            break;
+            case 'down':
+                if (parseInt(posY + this.vy) > parseInt(this.maxY)) {
+                    console.log('illegal move');
+                } else {
+                    this.y += this.vy;
+                }
+                break;
 
-        default:
-            console.log('Key not allowed');
+            default:
+                console.log('Key not allowed');
         }
         checkGameWon();
     };
